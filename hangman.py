@@ -50,57 +50,60 @@ def word_generator():
     return word
 
 
-'''here 'word' is the goal that user is trying to find. 'new_word' is what user guesses and only the correct letters will be 
+'''here 'word' is the goal that user is trying to find. 'guessed_word' is what user guesses and only the correct letters will be 
 displayed and rest of the letters will be shown with a '_' . We'll also keep track of number of guesses with guess_count
  and guessed_letters will be for user to track which letters he has already tried.'''
 def set_game():
-    global new_word
+    global guessed_word
     global guess_count
     global word
-    global list_new_word
+    global list_guessed_word
     global list_word
     global guessed_letters
     
     list_word = list(word)
-    new_word = '_'*len(word)
-    list_new_word = list(new_word)
+    guessed_word = '_'*len(word)
+    list_guessed_word = list(guessed_word)
     guess_count = 1
     guessed_letters = []
     return
 
-# defining correct_count and wrong_count to track success of the player, these will be used when the player decides not to
+# defining win_count and lose_count to track success of the player, these will be used when the player decides not to
 # play anymore 
-correct_count = 0
-wrong_count = 0
+win_count = 0
+lose_count = 0
 
 
 def hangman():
-    global new_word
+    global guessed_word
     global guess_count
-    global correct_count
-    global wrong_count
+    global win_count
+    global lose_count
 
     word_generator()
     set_game()
 
-    while guess_count<=6 and new_word!=word:
+    # Main part will work when the user still has guesses and didn't guess the correct word yet.
+    while guess_count<=6 and guessed_word!=word:
         guess=input('guess a letter: ').lower()
 
-
+        # First, putting 2 conditions to make sure the input is not given before and is a single letter from alphabet
         if guess in guessed_letters:
             print('you already guessed this letter')   
-
-        elif guess in list_word:
-            # if the guess is correct, we find which place that letter belongs to and add it on nword
-            for i in range(len(word)):
-                if guess==list_word[i]:
-                    list_new_word[i]=guess
-            new_word=''.join(list_new_word)
-            print(f"you've tried these letters: {','.join(guessed_letters)} ")
-            print(new_word)
+            
         elif len(guess) != 1 or guess not in alphabet:
             print('Please enter a single letter each time')
-
+        
+        # if the guess is correct, we find which place that letter belongs to and add it on guessed_word
+        elif guess in list_word:
+            for i in range(len(word)):
+                if guess==list_word[i]:
+                    list_guessed_word[i]=guess
+            guessed_word=''.join(list_guessed_word)
+            print(f"you've tried these letters: {','.join(guessed_letters)} ")
+            print(guessed_word)
+            
+        # when user guess is wrong, we print out how many attempts he has left and which letters was tried.
         else:
             if guess_count == 6:
                 print(loser_pics[guess_count-1])
@@ -108,28 +111,31 @@ def hangman():
                 print(f'{loser_pics[guess_count-1]}\n Wrong! You have',6-guess_count,'more guesses')
                 guessed_letters.append(guess)
                 print(f"You've tried these letters: {','.join(guessed_letters)} ")
-                print(new_word)
+                print(guessed_word)
             guess_count += 1
         continue
-
-    if new_word == word:
-        correct_count += 1
+        
+    # when the user guesses the word correctly, we finish the game, increase the win count and ask to play again.
+    if guessed_word == word:
+        win_count += 1
         print('you won')
         play_again=input('wanna play again? yes[y] or no[n]: ')
         if play_again.lower() == "y" or play_again.lower() == 'yes':
             hangman()
         else:
-            print(f"Thanks for playing! You've guessed {correct_count}/{correct_count + wrong_count} words right")
+            print(f"Thanks for playing! You've guessed {win_count}/{win_count + lose_count} words right")
             return
+        
+    # when the player runs out of guesses; the game finishes, increase the lose count and ask to play again
     else:
-        wrong_count += 1
+        lose_count += 1
         print('you lost')
         print('the word was ',word)
         play_again=input('wanna play again? yes[y] or no[n]: ')
         if play_again.lower() == "y" or play_again.lower() == 'yes':
             hangman()
         else:
-            print(f"Thanks for playing! You've guessed {correct_count}/{correct_count + wrong_count} words right")
+            print(f"Thanks for playing! You've guessed {win_count}/{win_count + lose_count} words right")
             return
 
 hangman()
