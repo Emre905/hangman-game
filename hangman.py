@@ -3,38 +3,25 @@ import string
 
 
 # (optional) Here we're defining different stages of losing and how will the user see how many moves he has got left
-LOSER_PICS = ['''
+# We'll seperate all lines and one step at each time remove the last character (except for the first '|' signs).
+# In the end we'll put back together it and append it to the list HANGMAN_PICS
+LAST_PIC="""
  +----+
- |    O   
- |     
- |     
-===''','''
- +----+
- |    O   
- |    |  
- |     
-=== ''','''
- +----+
- |    O   
- |   /|  
- |     
-=== ''','''
- +----+
- |    O   
- |   /|\  
- |     
-=== ''','''
- +----+
- |    O   
- |   /|\  
- |   /   
-=== ''','''
- +----+
- |    O   
- |   /|\  
- |   / \  
-=== ''']
-
+ |    O
+ |   /|\\
+ |   / \\
+=== 
+"""
+HANGMAN_LAST_PIC=LAST_PIC.splitlines()
+HANGMAN_PICS=['\n'.join(HANGMAN_LAST_PIC)]
+for j in range(2,4):
+    for i in range(3):
+        if len(HANGMAN_LAST_PIC[-j]) > 2:
+            HANGMAN_LAST_PIC[-j] = HANGMAN_LAST_PIC[-j][:-1].rstrip()
+            HANGMAN_PICS.append('\n'.join(HANGMAN_LAST_PIC))
+        else:
+            continue
+            
 ALPHABET = list(string.ascii_lowercase)
 WORDS = []
 
@@ -95,9 +82,9 @@ def hangman(win_count = 0, lose_count = 0):
         # when user guess is wrong, we print out how many attempts he has left and which letters was tried.
         else:
             if guess_count == 6:
-                print(LOSER_PICS[guess_count-1])
+                print(HANGMAN_PICS[-guess_count])
             else:    
-                print(f'{LOSER_PICS[guess_count-1]}\n Wrong! You have',6-guess_count,'more guesses')
+                print(f'{HANGMAN_PICS[-guess_count]}\n Wrong! You have',6-guess_count,'more guesses')
                 guessed_letters.append(guess)
                 print(f"You've tried these letters: {','.join(guessed_letters)} ")
                 print(guessed_word)
