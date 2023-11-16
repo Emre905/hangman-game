@@ -26,7 +26,7 @@ ALPHABET = list(string.ascii_lowercase)
 WORDS = []
 
 # opening the file and getting all words (lines) with more than 3 letters
-with open('english_WORDS.txt') as f:
+with open('english_words.txt') as f:
     WORDS = [line.strip() for line in f if len(line.strip())>3]
 
 # generating a random index and choosing corresponding word from the list
