@@ -1,4 +1,4 @@
-# hangman-game
+# hangman_game
 
 This is standard version of hangman game. The game runs in this order:
 1- First we define how will the losing stages be shown to user. 
