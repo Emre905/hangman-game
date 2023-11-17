@@ -31,7 +31,7 @@ with open('english_words.txt') as f:
 
 # generating a random index and choosing corresponding word from the list
 def word_generator():
-    random_index = random.randint(0,len(WORDS))
+    random_index = random.randint(0,len(WORDS)-1)
     word = WORDS[random_index]   
     return word
 
